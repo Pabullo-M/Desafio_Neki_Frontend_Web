@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { List, ListItem, ListItemText, CircularProgress, Typography, ListItemAvatar, Avatar } from '@mui/material';
-import { DeleteUsuarioSkill, getUsuarioSkills } from '../../service/Requisicoes';
+import { List, ListItem, ListItemText, CircularProgress, Typography, ListItemAvatar, Avatar, TextField} from '@mui/material';
+import { DeleteUsuarioSkill, getUsuarioSkills, putUsuarioSkills } from '../../service/Requisicoes';
 import { getFromLocalStorage } from '../../service/util';
 import { LoadingButton } from '@mui/lab';
 
@@ -13,6 +13,10 @@ function Skills() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [atualizarTela, setAtualizarTela] = useState(true);
+    const [alterarLevel, setAlterarLevel] = useState(true);
+    const [editItemId, setEditItemId] = useState(null);
+    const [novoLevel, setNovoLevel] = useState(null);
+
 
     useEffect(() => {
         if (!token) {
@@ -41,8 +45,14 @@ function Skills() {
         DeleteUsuarioSkill(id);
         setAtualizarTela(!atualizarTela);
     }
-    const handleAlterar = ()=>{
-
+    const handleAlterar = (skillId, levelAlterado)=>{
+        putUsuarioSkills(skillId, levelAlterado);
+        setAtualizarTela(!atualizarTela);
+        setEditItemId(null);
+    }
+    const handleCancelaAlteracao = () =>{
+        setEditItemId('');
+        setAlterarLevel(true);
     }
     return (
         <div>
@@ -53,34 +63,59 @@ function Skills() {
                 {data.map(item => (
                     <ListItem key={item.usuarioskillid}>
                         <ListItemAvatar>
-                            <Avatar src={item.imgurl} alt={item.skillnome} />
+                            <Avatar src={item.imgurl || 'https://via.placeholder.com/40'} alt={item.skillnome} />
                         </ListItemAvatar>
                         <ListItemText
                             primary={item.skillnome}
                             secondary={
                                 <div>
                                     <p>{item.skilldescricao}</p>
-                                    <p>Nível: {item.usuarioskilllevel}</p>
+                                    {alterarLevel && editItemId !== item.usuarioskillid ? (
+                                                <p>Nível: {item.usuarioskilllevel}</p>
+                                            ) : (
+                                                <TextField
+                                                    size='small'
+                                                    label="Alterar level"
+                                                    color="primary"
+                                                    variant="outlined"
+                                                    value={novoLevel}
+                                                    onChange={(event) => setNovoLevel(event.target.value)}
+                                                />
+                                            )}
+                                    {editItemId === item.usuarioskillid ? (
+                                        <div>
+                                            <LoadingButton
+                                                size="small"
+                                                onClick={()=>{handleAlterar(item.usuarioskillid, novoLevel)}}
+                                                loading={loading}
+                                                loadingPosition="center"
+                                                variant="contained"
+                                            >
+                                                <span>Confirmar</span>
+                                            </LoadingButton>
+                                        </div>
+                                    ) : (
+                                        <LoadingButton
+                                            size="small"
+                                            onClick={() => setEditItemId(item.usuarioskillid)}
+                                            loading={loading}
+                                            loadingPosition="center"
+                                            variant="contained"
+                                        >
+                                            Editar
+                                        </LoadingButton>
+                                        
+                                    )}
                                     <LoadingButton
                                         size="small"
-                                        onClick={()=>{handleDelete(item.usuarioskillid)}}
+                                        onClick={alterarLevel && editItemId !== item.usuarioskillid  ? () => handleDelete(item.usuarioskillid) : handleCancelaAlteracao}
                                         loading={loading}
                                         loadingPosition="center"
                                         variant="contained"
-                                        >
-                                        <span>Excluir</span>
-                                    </LoadingButton>
-                                    <LoadingButton
-                                        size="small"
-                                        onClick={handleAlterar}
-                                        loading={loading}
-                                        loadingPosition="center"
-                                        variant="contained"
-                                        >
-                                        <span>Alterar level</span>
+                                    >
+                                        {alterarLevel && editItemId !== item.usuarioskillid  ? <span>Excluir</span> : <span>Cancelar</span>}
                                     </LoadingButton>
                                 </div>
-                                
                             }
                         />
                     </ListItem>

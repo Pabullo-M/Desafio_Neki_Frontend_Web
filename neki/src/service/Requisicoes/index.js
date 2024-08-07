@@ -41,12 +41,27 @@ export const getUsuarioSkills = async (usuarioId)=>{
       throw error;
     }
   };
+  export const putUsuarioSkills = async (Id, levelAlterado)=>{
+    try {
+        const response = await api.put(`/usuarioSkill/${Id}`,
+            levelAlterado
+        , {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar habilidades:', error);
+      throw error;
+    }
+  };
 
 export const DeleteUsuarioSkill = (skillId)=>{
     api.delete(`/usuarioSkill/${skillId}`)
         .then(response => {
             console.log(response.data);
-            alert('Skill excluida')
         })
         .catch(error => {
             console.error(error);
