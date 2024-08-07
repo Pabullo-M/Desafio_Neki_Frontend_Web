@@ -26,10 +26,9 @@ function Register(){
 
 
     return(
-        <>
-            <h1>Cadastro</h1>
 
             <section>
+                <h1>Cadastro</h1>
                 <TextField 
                     label="Usuario" 
                     color="primary" 
@@ -60,7 +59,6 @@ function Register(){
                         <span>Registrar-se</span>
                 </LoadingButton>
             </section>
-        </>
     )
 }
 

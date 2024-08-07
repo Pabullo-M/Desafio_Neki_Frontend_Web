@@ -1,14 +1,15 @@
 import { Api } from "../Api";
+import { saveData } from "../util";
 
 const api = Api();
 
-api.get('/endpoint')
-    .then(response => {
-        console.log(response.data);
-    })
-    .catch(error => {
-        console.error(error);
-    });
+// api.get('/endpoint')
+//     .then(response => {
+//         console.log(response.data);
+//     })
+//     .catch(error => {
+//         console.error(error);
+//     });
 
     export const postLogin=(usuario, senha)=>{
         api.post('/usuario/login', { 
@@ -16,8 +17,10 @@ api.get('/endpoint')
             senha
          })
             .then(response => {
-                console.log(response.data);
-                return response.data;
+                console.log(response.data.id);
+                saveData('id',response.data.id)
+                console.log(response.data.token)
+                saveData('token',response.data.token)
             })
             .catch(error => {
                 console.error(error);
