@@ -4,5 +4,9 @@ section {
     gap: 16px; /* Espaço entre os elementos */
     max-width: 300px; /* Ajuste conforme necessário */
     margin: 0 auto; /* Centraliza a seção horizontalmente */
+    padding: 25px;
+    background-color: rgba(255, 255, 255, 0.452);
+    border-radius: 20px;
+    
   }
   

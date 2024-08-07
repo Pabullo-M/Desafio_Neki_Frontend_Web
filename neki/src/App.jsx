@@ -1,8 +1,8 @@
-import { useState } from 'react'
 import './App.css'
-import Login from './pages/login'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './pages/login'
 import Register from './pages/Register';
+import Skills from './pages/Skills'
 
 function App() {
   return (
@@ -10,6 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/skills" element={<Skills />} />
       </Routes>
     </Router>
   );
