@@ -28,6 +28,7 @@ const PasswordField = ({ label, onChange }) => {
               onClick={handleClickShowPassword}
               onMouseDown={handleMouseDownPassword}
             >
+               {showPassword ? <Visibility /> : <VisibilityOff />}
             </IconButton>
           </InputAdornment>
         ),
