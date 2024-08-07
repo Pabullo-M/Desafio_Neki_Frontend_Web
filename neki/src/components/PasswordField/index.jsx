@@ -5,7 +5,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-const PasswordField = ({ label, onChange }) => {
+const PasswordField = ({ label, onChange, value }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -18,6 +18,7 @@ const PasswordField = ({ label, onChange }) => {
       type={showPassword ? 'text' : 'password'}
       label={label}
       onChange={onChange}
+      value={value}
       variant="outlined"
       fullWidth
       InputProps={{

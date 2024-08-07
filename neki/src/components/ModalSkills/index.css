@@ -11,18 +11,20 @@
   }
   
   .modal-content {
-    background: white;
+    background: rgba(255, 255, 255, 0.644);
     padding: 20px;
     border-radius: 8px;
     position: relative;
     max-width: 500px;
     width: 100%;
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transição para efeitos */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow-y: auto;
+    height: 400px;
   }
   
   .modal-content:hover {
-    transform: scale(1.05); /* Aumenta o tamanho do modal ao passar o mouse */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Adiciona sombra ao passar o mouse */
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
   
   .modal-close {

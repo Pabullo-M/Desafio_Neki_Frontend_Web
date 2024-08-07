@@ -3,6 +3,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import "./index.css"
 import React from "react";
 import { postCadastroUsuario} from "../../service/Requisicoes";
+import PasswordField from "../../components/PasswordField";
 
 function Register(){
     const [loading, setLoading] = React.useState(false);
@@ -35,14 +36,14 @@ function Register(){
                     variant="outlined"
                     onChange={(event) => setUsuario(event.target.value)}
                 />
-                <TextField 
+                <PasswordField
                     type="password"
                     label="Senha" 
                     color="primary" 
                     variant="outlined"
                     onChange={(event) => setSenha(event.target.value)}
                 />
-                <TextField 
+                <PasswordField
                     type="password"
                     label="Confirmar senha" 
                     color="primary" 

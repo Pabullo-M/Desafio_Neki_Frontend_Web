@@ -24,8 +24,10 @@ function Login() {
       setChecked(JSON.parse(savedChecked));
     }
     const savedUser = getFromLocalStorage('user');
-    if (savedUser) {
+    const savedPassword = getFromLocalStorage('password')
+    if (savedUser&&savedPassword) {
       setUsuario(savedUser);
+      setSenha(savedPassword);
     }
   }, []);
 
@@ -49,13 +51,15 @@ function Login() {
 
     if (isChecked) {
       saveData('user', usuario);
+      saveData('password', senha)
     } else {
       clearLocalStorageItem('user');
+      clearLocalStorageItem('password');
+
     }
   }
 
   return (
-      <>
       <section className="sec">
         <h1>Login</h1>
         <TextField
@@ -67,6 +71,7 @@ function Login() {
         />
         <PasswordField
           label="Senha"
+          value={senha}
           onChange={(event) => setSenha(event.target.value)}
         />
         <LoadingButton
@@ -85,15 +90,10 @@ function Login() {
           inputProps={{ 'aria-label': 'controlled' }}
           size="small"
         />
-        Salvar usuário?
+        Salvar usuário e senha?
       </p>
       <p>Não tem uma conta? <RegisterLink /></p>
       </section>
-      <button
-      >
-        AAAAAAAA
-      </button>
-      </>
   );
 }
 

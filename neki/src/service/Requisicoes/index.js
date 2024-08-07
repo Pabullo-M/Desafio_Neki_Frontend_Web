@@ -75,6 +75,10 @@ export const postCadastroSkills=(usuarioId, skillId, level)=>{
         usuarioId,
         skillId,
         level
+        },{
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
         })
         .then(response => {
             console.log(response.data);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { List, ListItem, ListItemText, Typography, ListItemAvatar, Avatar, TextField} from '@mui/material';
-import { DeleteUsuarioSkill, getAllSkills, getUsuarioSkills, putUsuarioSkills } from '../../service/Requisicoes';
+import { DeleteUsuarioSkill, getAllSkills, getUsuarioSkills, postCadastroSkills, putUsuarioSkills } from '../../service/Requisicoes';
 import { getFromLocalStorage } from '../../service/util';
 import { LoadingButton } from '@mui/lab';
 import './index.css'
@@ -21,6 +21,7 @@ function Skills() {
     const [editItemId, setEditItemId] = useState(null);
     const [novoLevel, setNovoLevel] = useState(null);
     const [isModalOpen, setModalOpen] = useState(false);
+    const [levels, setLevels] = useState("");
 
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
@@ -70,23 +71,15 @@ function Skills() {
         setEditItemId('');
         setAlterarLevel(true);
     }
-
-    if(data.length===0){
-        console.log(data);
-        return <div>
-            <h1>Lista Vazia</h1>
-            <img
-                src={img}
-            />
-            <button
-                className='botao'
-                >
-                    Adicionar Skill
-            </button>
-        </div>
+    const handleAddLevel = (itemId) => {
+      postCadastroSkills(usuarioId, itemId, levels)
+      setLevels('');
+      setAtualizarTela(!atualizarTela)
     }
     return (
         <main className='containerPrincipal'>
+          {!data.length==0?
+          <>
           <Typography variant="h3" gutterBottom>
             Minhas Skills
           </Typography>
@@ -151,6 +144,12 @@ function Skills() {
               </ListItem>
             ))}
           </List>
+          </>: <div>
+                <h1>Lista Vazia</h1>
+                <img
+                    src={img}
+                />
+          </div>}
           <button
           className='botao'
           onClick={openModal}
@@ -164,15 +163,32 @@ function Skills() {
                 </Typography>
                 <List>
                     {dataSkill.map(item => (
-                        <ListItem key={item.id}>
-                            <ListItemAvatar>
-                                <Avatar src={item.imgUrl} alt={item.nome} />
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary={item.nome}
-                                secondary={item.descricao}
+                          <ListItem key={item.id}>
+                              <ListItemAvatar>
+                                  <Avatar src={item.imgUrl} alt={item.nome} />
+                              </ListItemAvatar>
+                              <ListItemText
+                                  primary={item.nome}
+                                  secondary={item.descricao}
+                              />
+                            <TextField
+                                size='small'
+                                label="Incluir Level"
+                                color="primary"
+                                variant="outlined"
+                                value={levels|| ''}
+                                onChange={(event) => setLevels(event.target.value)}
                             />
-                        </ListItem>
+                            <LoadingButton
+                                size="small"
+                                onClick={() => handleAddLevel(item.id)}
+                                loading={loading[item.id] || false}
+                                loadingPosition="center"
+                                variant="contained"
+                            >
+                                Adicionar
+                            </LoadingButton>
+                          </ListItem>
                     ))}
                 </List>
             </div>
