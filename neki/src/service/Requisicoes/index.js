@@ -1,5 +1,7 @@
 import { Api } from "../Api";
-import { saveData } from "../util";
+import { getFromLocalStorage, saveData } from "../util";
+
+const token = getFromLocalStorage('token');
 
 const api = Api();
 
@@ -11,32 +13,40 @@ const api = Api();
 //         console.error(error);
 //     });
 
-export const getAllSkills = ()=>{
-    api.get('/Skills')
-        .then(response => {
-            console.log(response.data);
-        })
-        .catch(error => {
-            console.error(error);
-        });
-
-}
-export const getUsuarioSkills = (usuarioId)=>{
-    api.get(`/usuarioSkill/${usuarioId}`)
-        .then(response => {
-            console.log(response.data);
-            response.data;
-        })
-        .catch(error => {
-            console.error(error);
-        });
-
-}
+export const getAllSkills = async () => {
+    try {
+      const response = await api.get('/skills', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar habilidades:', error);
+      throw error;
+    }
+  };
+export const getUsuarioSkills = async (usuarioId)=>{
+    try {
+        const response = await api.get(`/usuarioSkill/${usuarioId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao buscar habilidades:', error);
+      throw error;
+    }
+  };
 
 export const DeleteUsuarioSkill = (skillId)=>{
     api.delete(`/usuarioSkill/${skillId}`)
         .then(response => {
             console.log(response.data);
+            alert('Skill excluida')
         })
         .catch(error => {
             console.error(error);
