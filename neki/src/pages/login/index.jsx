@@ -1,4 +1,4 @@
-import { Checkbox, TextField } from "@mui/material";
+import { Button, Checkbox, TextField } from "@mui/material";
 import LoadingButton from '@mui/lab/LoadingButton';
 import "./index.css";
 import React, { useEffect } from "react";
@@ -32,14 +32,14 @@ function Login() {
   function handleClick() {
     setLoading(true);
     try{
-        postLogin(usuario, senha)
+        postLogin(usuario, senha)  
+        navigate('/Skills')
     }catch(error){
         console.log(error);
         alert("Falha no login!")
         setLoading(false);
     }
     setLoading(false);
-    navigate('/Skills')
   }
 
   function handleCheck(event) {
@@ -55,7 +55,7 @@ function Login() {
   }
 
   return (
-      
+      <>
       <section className="sec">
         <h1>Login</h1>
         <TextField
@@ -89,7 +89,11 @@ function Login() {
       </p>
       <p>Não tem uma conta? <RegisterLink /></p>
       </section>
-
+      <button
+      >
+        AAAAAAAA
+      </button>
+      </>
   );
 }
 
