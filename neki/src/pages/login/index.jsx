@@ -1,7 +1,7 @@
 import { Button, Checkbox, TextField } from "@mui/material";
 import LoadingButton from '@mui/lab/LoadingButton';
 import "./index.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import RegisterLink from "../../components/RegisterLink";
 import PasswordField from "../../components/PasswordField";
 import { postLogin } from "../../service/Requisicoes";
@@ -9,10 +9,11 @@ import { saveData, clearLocalStorageItem, getFromLocalStorage } from "../../serv
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const [loading, setLoading] = React.useState(false);
-  const [checked, setChecked] = React.useState(false);
-  const [usuario, setUsuario] = React.useState('');
-  const [senha, setSenha] = React.useState('');
+  const [loading, setLoading] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [usuario, setUsuario] = useState('');
+  const [senha, setSenha] = useState('');
+  const[atualizarTela, setAtualizarTela]=useState(false)
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,19 +30,22 @@ function Login() {
       setUsuario(savedUser);
       setSenha(savedPassword);
     }
-  }, []);
+  }, [atualizarTela, ]);
 
   function handleClick() {
     setLoading(true);
     try{
         postLogin(usuario, senha)  
-        navigate('/Skills')
     }catch(error){
         console.log(error);
         alert("Falha no login!")
         setLoading(false);
     }
-    setLoading(false);
+    const timer = setTimeout(()=>{
+    // setLoading(false);
+    setAtualizarTela(!atualizarTela)
+    }, 2000)
+    timer();
   }
 
   function handleCheck(event) {
@@ -55,7 +59,6 @@ function Login() {
     } else {
       clearLocalStorageItem('user');
       clearLocalStorageItem('password');
-
     }
   }
 

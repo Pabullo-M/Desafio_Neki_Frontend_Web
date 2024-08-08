@@ -20,7 +20,6 @@ function Register(){
 
       }
       setToken(postCadastroUsuario(usuario, senha))
-      console.log(token + "aloo");
       setLoading(false)
     }
 

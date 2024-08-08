@@ -110,7 +110,7 @@ export const postCadastroUsuario=(usuario, senha)=>{
         senha
         })
         .then(response => {
-            console.log(response.data);
+            alert(response.data);
         })
         .catch(error => {
             console.error(error);
