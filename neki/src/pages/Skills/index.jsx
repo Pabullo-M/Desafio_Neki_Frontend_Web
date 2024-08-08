@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { List, ListItem, ListItemText, Typography, ListItemAvatar, Avatar, TextField, IconButton} from '@mui/material';
+import { List, ListItem, ListItemText, Typography, ListItemAvatar, Avatar, TextField, IconButton, Button} from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { DeleteUsuarioSkill, getAllSkills, getUsuarioSkills, postCadastroSkills, putUsuarioSkills } from '../../service/Requisicoes';
 import { clearLocalStorageItem, getFromLocalStorage } from '../../service/util';
@@ -21,8 +21,9 @@ function Skills() {
     const [alterarLevel, setAlterarLevel] = useState(true);
     const [editItemId, setEditItemId] = useState(null);
     const [novoLevel, setNovoLevel] = useState(null);
-    const [isModalOpen, setModalOpen] = useState(false);
     const [levels, setLevels] = useState("");
+    const [isModalOpen, setModalOpen] = useState(false);
+   
 
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
@@ -68,6 +69,7 @@ function Skills() {
     }
     const handleAlterar = (skillId, levelAlterado)=>{
         putUsuarioSkills(skillId, levelAlterado);
+        setNovoLevel('');
         setAtualizarTela(!atualizarTela);
         setEditItemId(null);
     }
@@ -84,6 +86,12 @@ function Skills() {
       clearLocalStorageItem('token')
       setAtualizarTela(!atualizarTela)
     }
+    const handleChange = (event) => {
+      setLevels(event.target.value);
+    };
+    const handleEditClick = (id) => {
+      setEditItemId(id);
+    };
     return (
         <>
           <header className="header">
@@ -176,35 +184,47 @@ function Skills() {
                       Skills
                   </Typography>
                   <List>
-                      {dataSkill.map(item => (
-                            <ListItem key={item.id}>
-                                <ListItemAvatar>
-                                    <Avatar src={item.imgUrl} alt={item.nome} />
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary={item.nome}
-                                    secondary={item.descricao}
-                                />
-                              <TextField
-                                  size='small'
-                                  label="Incluir Level"
-                                  color="primary"
-                                  variant="outlined"
-                                  value={levels|| ''}
-                                  onChange={(event) => setLevels(event.target.value)}
-                              />
-                              <LoadingButton
-                                  size="small"
-                                  onClick={() => handleAddLevel(item.id)}
-                                  loading={loading[item.id] || false}
-                                  loadingPosition="center"
-                                  variant="contained"
-                              >
-                                  Adicionar
-                              </LoadingButton>
-                            </ListItem>
-                      ))}
-                  </List>
+                  {dataSkill.map(item => (
+                    <ListItem key={item.id}>
+                      <ListItemAvatar>
+                        <Avatar src={item.imgUrl} alt={item.nome} />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={item.nome}
+                        secondary={item.descricao}
+                      />
+                      {editItemId === item.id ? (
+                        <>
+                          <TextField
+                            size='small'
+                            label="Incluir Level"
+                            color="primary"
+                            variant="outlined"
+                            onChange={(event) => handleChange(event)}
+                            value={levels || ''}
+                          />
+                          <LoadingButton
+                            size="small"
+                            onClick={() => handleAddLevel(item.id)}
+                            loading={loading[item.id] || false}
+                            loadingPosition="center"
+                            variant="contained"
+                          >
+                            Adicionar
+                          </LoadingButton>
+                        </>
+                      ) : (
+                        <Button
+                          size="small"
+                          onClick={() => handleEditClick(item.id)}
+                          variant="outlined"
+                        >
+                          Editar Nível
+                        </Button>
+                      )}
+                    </ListItem>
+                  ))}
+                </List>
               </div>
             </Modal>
           </main>

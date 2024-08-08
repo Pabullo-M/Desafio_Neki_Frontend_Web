@@ -59,7 +59,11 @@ export const getUsuarioSkills = async (usuarioId)=>{
   };
 
 export const DeleteUsuarioSkill = (skillId)=>{
-    api.delete(`/usuarioSkill/${skillId}`)
+    api.delete(`/usuarioSkill/${skillId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
         .then(response => {
             console.log(response.data);
         })
@@ -88,31 +92,57 @@ export const postCadastroSkills=(usuarioId, skillId, level)=>{
         });
 }
 
-export const postLogin=(usuario, senha)=>{
-    api.post('/usuario/login', { 
+export const postLogin = async (usuario, senha) => {
+  try {
+    const response = await api.post('/usuario/login', { 
         usuario,
         senha
-        })
-        .then(response => {
-            console.log(response.data.id);
-            saveData('id',response.data.id)
-            console.log(response.data.token)
-            saveData('token',response.data.token)
-        })
-        .catch(error => {
-            console.error(error);
-        });
-}
+    });
+    console.log(response.data.id);
+    saveData('id', response.data.id);
+    console.log(response.data.token);
+    saveData('token', response.data.token);
+    
+    return { data: response.data, error: null };
+  } catch (error) {
+    let errorMessage = 'Erro desconhecido';
 
-export const postCadastroUsuario=(usuario, senha)=>{
-    api.post('/usuario/cadastro', { 
+    if (error.response) {
+      if (error.response.status === 401) {
+        errorMessage = 'Usuário ou senha incorretos';
+      } else {
+        errorMessage = error.response.data.message || 'Erro desconhecido';
+      }
+    } else if (error.request) {
+      errorMessage = 'Nenhuma resposta recebida do servidor';
+    } else {
+      errorMessage = error.message || 'Erro desconhecido';
+    }
+
+    console.error(errorMessage);
+
+    return { data: null, error: errorMessage };
+  }
+};
+
+export const postCadastroUsuario = async (usuario, senha) => {
+  try {
+    const response = await api.post('/usuario/cadastro', { 
         usuario,
         senha
-        })
-        .then(response => {
-            alert(response.data);
-        })
-        .catch(error => {
-            console.error(error);
-        });
-}
+    });
+    return { data: response.data, error: null };
+  } catch (error) {
+    let errorMessage = 'Erro desconhecido';
+
+    if (error.response) {
+      errorMessage = error.response.data.message || 'Erro desconhecido';
+    } else if (error.request) {
+      errorMessage = 'Nenhuma resposta recebida do servidor';
+    } else {
+      errorMessage = error.message || 'Erro desconhecido';
+    }
+
+    return { data: null, error: errorMessage };
+  }
+};

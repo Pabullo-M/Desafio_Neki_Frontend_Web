@@ -32,20 +32,26 @@ function Login() {
     }
   }, [atualizarTela, ]);
 
-  function handleClick() {
+
+  async function handleClick() {
     setLoading(true);
-    try{
-        postLogin(usuario, senha)  
-    }catch(error){
-        console.log(error);
-        alert("Falha no login!")
-        setLoading(false);
+    if(!usuario || !senha){
+      setLoading(false)
+      return alert('Os campos usuario e senha devem estar preenchidos!')
     }
-    const timer = setTimeout(()=>{
-    // setLoading(false);
-    setAtualizarTela(!atualizarTela)
-    }, 2000)
-    timer();
+    const resultado = await postLogin(usuario, senha);
+    
+    if (resultado.error) {
+      console.log(resultado.error);
+      alert(resultado.error);
+    }
+  
+    setLoading(false);
+    
+    const timer = setTimeout(() => {
+      setAtualizarTela(prev => !prev);
+      clearTimeout(timer);
+    }, 2000);
   }
 
   function handleCheck(event) {
