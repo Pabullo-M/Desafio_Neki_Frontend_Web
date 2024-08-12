@@ -126,6 +126,7 @@ function Skills() {
                             variant="outlined"
                             value={novoLevel}
                             onChange={(event) => setNovoLevel(event.target.value)}
+                            type='number'
                           />
                         )}
                         <div className="button-group">
@@ -202,6 +203,7 @@ function Skills() {
                             variant="outlined"
                             onChange={(event) => handleChange(event)}
                             value={levels || ''}
+                            type='number'
                           />
                           <LoadingButton
                             size="small"

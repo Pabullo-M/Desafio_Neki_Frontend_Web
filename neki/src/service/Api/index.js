@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { getFromLocalStorage } from '../util';
 
 
 const api = axios.create({

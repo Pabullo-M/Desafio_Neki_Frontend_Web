@@ -136,7 +136,7 @@ export const postCadastroUsuario = async (usuario, senha) => {
     let errorMessage = 'Erro desconhecido';
 
     if (error.response) {
-      errorMessage = error.response.data.message || 'Erro desconhecido';
+      errorMessage = error.response.data || 'Erro desconhecido';
     } else if (error.request) {
       errorMessage = 'Nenhuma resposta recebida do servidor';
     } else {
