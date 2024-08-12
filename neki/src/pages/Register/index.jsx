@@ -1,26 +1,54 @@
 import {TextField } from "@mui/material";
 import LoadingButton from '@mui/lab/LoadingButton';
 import "./index.css"
-import React from "react";
+import React, { useState } from "react";
 import { postCadastroUsuario} from "../../service/Requisicoes";
+import PasswordField from "../../components/PasswordField";
+import Modal from "../../components/ModalSkills";
+import { useNavigate } from "react-router-dom";
 
 function Register(){
-    const [loading, setLoading] = React.useState(false);
-    const [usuario, setUsuario] = React.useState('');
-    const [senha, setSenha] = React.useState('');
+    const [loading, setLoading] = useState(false);
+    const [usuario, setUsuario] = useState('');
+    const [senha, setSenha] = useState('');
     const [confirmaSenha, setConfirmaSenha] = React.useState('');
-    const [token, setToken] = React.useState('');
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [responseCadastro, setResponseCadastro] = useState('');
 
-    function handleClick() {
-      setLoading(true);
-      if(confirmaSenha !== senha){
-        setLoading(false)
-        return alert("As senhas devem ser iguais")
+    const navigate = useNavigate();
+   
 
-      }
-      setToken(postCadastroUsuario(usuario, senha))
-      console.log(token + "aloo");
-      setLoading(false)
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => setModalOpen(false);
+
+    async function handleClick() {
+        setLoading(true);
+    
+        if(!senha || !usuario){
+            setResponseCadastro('Usuario ou senha inválidos, favor verificar!')
+            setLoading(false);
+            return openModal()
+        }
+
+        if (confirmaSenha !== senha) {
+            setLoading(false);
+            openModal();
+            setResponseCadastro('As senhas devem ser iguais, favor verificar!');
+            return;
+        }
+
+    
+        const { data, error } = await postCadastroUsuario(usuario, senha);
+    
+        if (error) {
+            setResponseCadastro(`Erro ao cadastrar usuário: ${error}`);
+            openModal();
+        } else {
+            alert(data);
+            navigate('/');
+        }
+    
+        setLoading(false);
     }
 
 
@@ -35,14 +63,14 @@ function Register(){
                     variant="outlined"
                     onChange={(event) => setUsuario(event.target.value)}
                 />
-                <TextField 
+                <PasswordField
                     type="password"
                     label="Senha" 
                     color="primary" 
                     variant="outlined"
                     onChange={(event) => setSenha(event.target.value)}
                 />
-                <TextField 
+                <PasswordField
                     type="password"
                     label="Confirmar senha" 
                     color="primary" 
@@ -58,6 +86,10 @@ function Register(){
                     >
                         <span>Registrar-se</span>
                 </LoadingButton>
+                <Modal className= "modalRegistro" isOpen={isModalOpen} onClose={closeModal}>
+                    <h1>Aviso!</h1>
+                    <h2>{responseCadastro}</h2>
+                </Modal>
             </section>
     )
 }

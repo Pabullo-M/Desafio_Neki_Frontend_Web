@@ -1,7 +1,7 @@
-import { Checkbox, TextField } from "@mui/material";
+import { Button, Checkbox, TextField } from "@mui/material";
 import LoadingButton from '@mui/lab/LoadingButton';
 import "./index.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import RegisterLink from "../../components/RegisterLink";
 import PasswordField from "../../components/PasswordField";
 import { postLogin } from "../../service/Requisicoes";
@@ -9,10 +9,11 @@ import { saveData, clearLocalStorageItem, getFromLocalStorage } from "../../serv
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const [loading, setLoading] = React.useState(false);
-  const [checked, setChecked] = React.useState(false);
-  const [usuario, setUsuario] = React.useState('');
-  const [senha, setSenha] = React.useState('');
+  const [loading, setLoading] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [usuario, setUsuario] = useState('');
+  const [senha, setSenha] = useState('');
+  const[atualizarTela, setAtualizarTela]=useState(false)
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,22 +25,33 @@ function Login() {
       setChecked(JSON.parse(savedChecked));
     }
     const savedUser = getFromLocalStorage('user');
-    if (savedUser) {
+    const savedPassword = getFromLocalStorage('password')
+    if (savedUser&&savedPassword) {
       setUsuario(savedUser);
+      setSenha(savedPassword);
     }
-  }, []);
+  }, [atualizarTela, ]);
 
-  function handleClick() {
+
+  async function handleClick() {
     setLoading(true);
-    try{
-        postLogin(usuario, senha)
-    }catch(error){
-        console.log(error);
-        alert("Falha no login!")
-        setLoading(false);
+    if(!usuario || !senha){
+      setLoading(false)
+      return alert('Os campos usuario e senha devem estar preenchidos!')
     }
+    const resultado = await postLogin(usuario, senha);
+    
+    if (resultado.error) {
+      console.log(resultado.error);
+      alert(resultado.error);
+    }
+  
     setLoading(false);
-    navigate('/Skills')
+    
+    const timer = setTimeout(() => {
+      setAtualizarTela(prev => !prev);
+      clearTimeout(timer);
+    }, 2000);
   }
 
   function handleCheck(event) {
@@ -49,13 +61,14 @@ function Login() {
 
     if (isChecked) {
       saveData('user', usuario);
+      saveData('password', senha)
     } else {
       clearLocalStorageItem('user');
+      clearLocalStorageItem('password');
     }
   }
 
   return (
-      
       <section className="sec">
         <h1>Login</h1>
         <TextField
@@ -67,6 +80,7 @@ function Login() {
         />
         <PasswordField
           label="Senha"
+          value={senha}
           onChange={(event) => setSenha(event.target.value)}
         />
         <LoadingButton
@@ -85,11 +99,10 @@ function Login() {
           inputProps={{ 'aria-label': 'controlled' }}
           size="small"
         />
-        Salvar usuário?
+        Salvar usuário e senha?
       </p>
       <p>Não tem uma conta? <RegisterLink /></p>
       </section>
-
   );
 }
 
