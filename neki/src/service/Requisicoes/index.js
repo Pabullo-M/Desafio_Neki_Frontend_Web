@@ -5,14 +5,6 @@ const token = getFromLocalStorage('token');
 
 const api = Api();
 
-// api.get('/endpoint')
-//     .then(response => {
-//         console.log(response.data);
-//     })
-//     .catch(error => {
-//         console.error(error);
-//     });
-
 export const getAllSkills = async () => {
     try {
       const response = await api.get('/skills', {
